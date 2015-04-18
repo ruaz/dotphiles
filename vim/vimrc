@@ -15,14 +15,195 @@ if has("user_commands")
   filetype off
   set rtp+=~/.vim/bundle/vundle/
   call vundle#rc()
-  "let g:vundles=['general', 'git', 'hg', 'programming', 'completion', 'ruby', 'python', 'misc']
-  let g:vundles=['general', 'programming']
+  "let g:vundles=['general', 'git', 'hg', 'programming', 'completion', 'ruby', 'python', 'misc', 'backbone', 'node', 'less']
+  let g:vundles=['general', 'programming', 'completion', 'git', 'misc', 'javascript', 'angular']
   let g:neocomplcache_enable_at_startup = 1
   " Load 'vundles'
   source ~/.vim/vundles.vim
   " Add extra bundles here...
-  " Bundle 'reponame'
+  " Plugin 'reponame'
 endif
 
 " Customize to your needs...
+""""""""""""""""""""""""" https://github.com/alessioalex/dotfiles/blob/master/vimrc """""""""""""""""""""""""
 
+" General {
+    filetype plugin indent on   " Automatically detect file types
+    syntax enable               " Turn on syntax highlighting
+
+    set splitbelow              " Splits window BELOW current window
+    set splitright              " Open new split on the right
+    set autochdir               " Automatically use the current file's directory as the working directory
+    set autowrite               " Automatically write a file when leaving a modified buffer
+    set viewoptions=folds,options,cursor,unix,slash " Better unix / windows compatibility
+    set timeoutlen=500          " Lower the timeout after typing the leader key
+    set hidden                  " Switch between buffers without saving
+
+    autocmd! bufwritepost .vimrc source $MYVIMRC | AirlineRefresh " Source the vimrc file after saving it
+
+    " ejs in Node.js is kindof like html
+    au BufRead,BufNewFile *.ejs set filetype=html
+
+    " au BufRead,BufNewFile *.als setfiletype alloy4
+
+    " autocmd BufRead,BufNewFile *.php set ft=php.html " para ter disponiveis snippets html em ficheiros php
+    autocmd FileType php set ft=php.yii.yii-chtml.html " For SnipMate
+
+
+    " Enable omni completion {
+        autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+        autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+        autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+        autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+    " }
+
+    " Setting up the directories {
+        set backup                        " enable backup
+        set backupdir=~/.vim/tmp/backup/ " backups
+        set directory=~/.vim/tmp/swap/   " Swap files location
+        set viewdir=$HOME/.vim/sessions   " View files location
+    " }
+
+    " Buffers {
+        nnoremap <C-e> :b#<CR> " mais rapido para alternar entre buffers
+        nnoremap <leader>l :ls<CR>:b<space> " listar buffers e preparar logo para escolher um
+        "autochdir aka autocmd BufEnter * cd %:p:h " Automatically change the working directory to that of the file in the buffer
+    "}
+" }
+
+" Vim UI {
+    set background=dark     " Assume a dark background
+    colorscheme solarized
+
+    set tabpagemax=15 " Only show 15 tabs
+    set showmode      " Display the current mode
+
+     if has('cmdline_info')
+        set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%) " a ruler on steroids
+    endif
+
+    "Set a nice title
+    set title
+    set titlestring=%t%(\ %M%)%(\ (%{expand(\"%:p:h\")})%)%(\ %a%)\ -\ %{v:servername}
+    set linespace=3                         " Prefer a slightly higer line height
+    set showmatch                           " Show matching brackets/parenthesis
+    set wildmode=list:longest,full          " Command <Tab> completion, list matches, then longest common part, then all.
+    set whichwrap=b,s,h,l,<,>,[,]           " Backspace and cursor keys wrap to
+    " set scrolljump=5                      " Lines to scroll when cursor leaves screen
+    set scrolloff=5                         " Minimum 5 lines of text above and below the cursor
+    set foldenable                          " Auto fold colde
+    set gdefault                            " The /g flag on :s substitutions by default
+    set list                                " View tabs, where line ends etc
+    set listchars=tab:>.,trail:.,extends:#,nbsp:. " Highlight problematic whitespace
+                                            " Tab displays as >.. & space as .
+" }
+
+" Formatting {
+    set formatoptions=qrn1
+    set linebreak
+    set showbreak=…
+    set smartindent       " Do smart autoindenting when starting a new line
+    set softtabstop=2     " Let backspace delete indent
+    set pastetoggle=<F12> " Sane indentation on pastes
+    " Remove trailing whitespaces and ^M chars
+    autocmd FileType c,cpp,java,php,js,python,twig,xml,yml autocmd BufWritePre <buffer> :call setline(1,map(getline(1,"$"),'substitute(v:val,"\\s\\+$","","")'))
+
+    " JavaScript - set 2 spaces for tabs
+    au FileType javascript set shiftwidth=2
+    au FileType javascript set tabstop=2
+    au FileType javascript set softtabstop=2
+" }
+
+" Key (re)Mappings {
+
+    nnoremap ' `
+    nnoremap ` '
+
+    " With a map leader it's possible to do extra key combinations
+    " like <leader>w saves the current file
+    let mapleader = "ç"
+    let g:mapleader = "ç"
+
+    nmap <space> :
+
+    " Fix for navigating long lines
+    " Wrapped lines goes down/up to next row, rather than next line in file.
+    nmap j gj
+    nmap k gk
+
+    " Yank from the cursor to the end of the line, to be consistent with C and D.
+    nnoremap Y y$
+
+    " Code folding options
+    nmap <leader>f0 :set foldlevel=0<CR>
+    nmap <leader>f1 :set foldlevel=1<CR>
+    nmap <leader>f2 :set foldlevel=2<CR>
+    nmap <leader>f3 :set foldlevel=3<CR>
+    nmap <leader>f4 :set foldlevel=4<CR>
+    nmap <leader>f5 :set foldlevel=5<CR>
+    nmap <leader>f6 :set foldlevel=6<CR>
+    nmap <leader>f7 :set foldlevel=7<CR>
+    nmap <leader>f8 :set foldlevel=8<CR>
+    nmap <leader>f9 :set foldlevel=9<CR>
+
+    " Window commands
+    nnoremap <C-o> <C-w>o
+    nnoremap <C-k> <C-w>k
+    nnoremap <C-h> <C-w>h
+    nnoremap <C-j> <C-w>j
+    nnoremap <C-l> <C-w>l
+    nnoremap <leader>k <C-w>K
+    nnoremap <leader>h <C-w>H
+    nnoremap <leader>j <C-w>J
+    nnoremap <leader>l <C-w>L
+    nnoremap <C-c> <C-w>c
+    nnoremap <C-x> <C-w>x
+    nnoremap <leader>w <C-w>w
+    nnoremap <C-s> <C-w>s
+    nnoremap <C-\> <C-w>v
+
+    "Shortcut to fold tags with leader (usually \) + ft
+    nnoremap <leader>ft Vatzf
+
+    " Change Working Directory to that of the current file
+    " cmap cwd lcd %:p:h
+    " cmap cd. lcd %:p:h
+
+    " Visual shifting (does not exit Visual mode)
+    vnoremap < <gv
+    vnoremap > >gv
+
+    " Map escape key to jj -- much faster
+    imap jj <esc>
+
+    " Shortcut for editing .vimrc
+    map <leader>v :tabedit $MYVIMRC<cr>
+
+    " Delete all buffers except the current one (via Derek Wyatt)
+    " nmap <silent> ,da :exec "1," . bufnr('$') . "bd"<cr>
+
+    "Opens a vertical split and switches over (\v)
+    nmap <leader>vs <C-w>v<C-w>l
+
+    " Jump between placeholders with CTRL+J
+    nnoremap <c-j> /<+.\{-1,}+><cr>c/+>/e<cr>
+    inoremap <c-j> <ESC>/<+.\{-1,}+><cr>c/+>/e<cr>
+
+    " Toggle highlight search with CTRL+S
+    " Function defined in includes/functions.vim
+    " nmap <silent> <C-s> <Esc>:call ToggleHLSearch()<cr>
+" }
+
+" GUI Settings {
+    " GVIM- (here instead of .gvimrc)
+    if has('gui_running')
+        set guioptions-=m          " Remove the menu & toolbar
+        set guioptions-=T
+        set lines=55 columns=158    " Set fullscreen for my desktop
+        set guifont=Inconsolata\ for\ Powerline:h13
+    else
+        set term=builtin_ansi       " Make arrow and other keys work
+        set t_Co=256
+    endif
+" }
+runtime macros/matchit.vim
