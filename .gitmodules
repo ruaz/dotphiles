@@ -16,6 +16,3 @@
 [submodule "vim/dotvim"]
 	path = vim/dotvim
 	url = https://github.com/dotphiles/dotvim.git
-[submodule ".dotfiles/vim/dotvim/bundle/vim-snippets/UltiSnips"]
-	path = .dotfiles/vim/dotvim/bundle/vim-snippets/UltiSnips
-	url = git@github.com:matthewsimo/angular-vim-snippets.git
