@@ -16,5 +16,5 @@ if has('mac')
   set lines=44 columns=180 " fullscreen macbookpro 13'
 
 elseif has('unix')
-  set guifont="DejaVu Sans Mono 10"
+  set guifont=DejaVu\ Sans\ Mono\ for\ Powerline\ 10
 endif
